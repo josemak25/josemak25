@@ -1,2 +1,2 @@
-# decagon-curriculum
-A curriculum service for decadevs 
+# peaky-sneakers-server
+peaky-sneakers-server
