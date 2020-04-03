@@ -1,15 +1,12 @@
-import { Router } from "express";
-import { celebrate as validate } from "celebrate";
-import userValidation from "../validations/user.validation";
-import userController from "../controller/user.controller";
+import { Router } from 'express';
+import authToken from '../policies/auth.policy';
+import userCtrl from '../controllers/user.controller';
+import IsAdmin from '../middlewares/is-admin.middleware';
 
 const router = Router();
 
-router
-  .route("/")
-  .post(
-    validate(userValidation.createUser, { abortEarly: false }),
-    userController.createUser
-  );
+router.route('/').get(authToken, IsAdmin, userCtrl.getAll);
+
+router.route('/:id').get(authToken, userCtrl.getUser);
 
 export default router;
