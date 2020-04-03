@@ -1,13 +1,89 @@
-import mongoose from "mongoose";
-import UserInterface from "../types/user.type";
+import { model, Schema } from 'mongoose';
+import UserInterface from '../types/user';
+import bcryptService from '../services/bcrypt.service';
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String
+const UserSchema = new Schema({
+  firstName: {
+    type: String,
+    minlength: 2,
+    maxlength: 250,
+    trim: true,
+    lowercase: true,
+    required: true
   },
-  age: {
-    type: Number
+
+  lastName: {
+    type: String,
+    minlength: 2,
+    maxlength: 250,
+    trim: true,
+    lowercase: true,
+    required: true
+  },
+
+  phone: {
+    type: String,
+    validate: {
+      validator: (phone: string) => /^(\+234|0)\d{10}$/.test(phone),
+      message: '{VALUE} Phone number must be a valid number!'
+    },
+    minlength: 11,
+    maxlength: 11,
+    trim: true,
+    required: true,
+    index: true
+  },
+
+  password: {
+    type: String,
+    minlength: 6,
+    maxlength: 30,
+    trim: true,
+    required: true
+  },
+
+  email: { type: String, default: null },
+
+  DOB: { type: Date, default: null },
+
+  isVerified: { type: Boolean, default: false },
+
+  isBlocked: { type: Boolean, default: false },
+
+  gender: {
+    type: String,
+    required: true,
+    enum: ['male', 'female'],
+    default: 'male'
+  },
+
+  role: {
+    type: String,
+    enum: ['customer', 'administrator'],
+    default: 'customer'
   }
 });
 
-export default mongoose.model<UserInterface>("users", userSchema);
+/**
+ * pre-save hooks
+ */
+UserSchema.pre<UserInterface>('save', async function(next) {
+  try {
+    this.password = await bcryptService.hashPassword(this.toObject());
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Methods
+ */
+UserSchema.methods = {
+  toJSON() {
+    const { password, _id, __v, ...rest } = this.toObject();
+    return { ...rest, id: _id };
+  }
+};
+
+export default model<UserInterface>('user', UserSchema);

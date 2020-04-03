@@ -1,4 +1,4 @@
-import { JoiErrorInterface } from "../types/customError.type";
+import { JoiErrorInterface } from './types';
 
 /**
  * Returns a custom error object with descriptive messages.
@@ -6,9 +6,11 @@ import { JoiErrorInterface } from "../types/customError.type";
  * @returns {Object}
  */
 
-export const JoiErrorFormatter = (error: JoiErrorInterface[]) => {
+export const JoiErrorFormatter = (error: JoiErrorInterface[]): object => {
   return error.reduce<any>((acc, err) => {
-    acc[err.path[0]] = err.message.replace(/"/g, "");
+    const key: string = err.path[0];
+    acc[key] = err.message.replace(/"/g, '');
+    if (key === 'phone') acc[key] = 'Phone number must be a valid number!';
     return acc;
   }, {});
 };
