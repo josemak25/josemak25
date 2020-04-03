@@ -1,2 +1,2 @@
-# peaky-sneakers-server
-peaky-sneakers-server
+# Peaky sneakers server
+An online server for the peaky sneakers server
