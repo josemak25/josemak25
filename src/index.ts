@@ -1,51 +1,58 @@
-import mongoose, { Document } from "mongoose";
 import http from "http";
-import util from "util";
+import express from "express";
+import logger from "morgan";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import compress from "compression";
+import methodOverride from "method-override";
+import cors from "cors";
+import helmet from "helmet";
+import routes from "./routes";
+import config from "./config";
+import error from "./config/errors";
 
-// config should be imported before importing any other file
-import config from "./config/env";
-
-import app from "./app";
-
-import debug from "debug";
-
+// express application
+const app = express();
 const server = new http.Server(app);
 
-// connect to mongo db
-const mongoUri = config.mongo.host;
+// start db
+import "./config/database";
 
-//@ts-ignore
-mongoose.connect(mongoUri, {
-  keepAlive: true,
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false
-});
+// secure apps by setting various HTTP headers
+app.use(
+  helmet({ dnsPrefetchControl: false, frameguard: false, ieNoOpen: false })
+);
 
-mongoose.connection.on("error", () => {
-  throw new Error(`unable to connect to database: ${mongoUri}`);
-});
+// allow cross origin requests
+// configure to only allow requests from certain origins
+app.use(cors({ credentials: true, origin: true }));
+app.use(cookieParser());
 
-// print mongoose logs in dev env
-if (config.mongooseDebug) {
-  mongoose.set(
-    "debug",
-    (collectionName: String, method: String, query: String, doc: Document) => {
-      debug("mongo-course-api:index")(
-        `${collectionName}.${method}`,
-        util.inspect(query, false, 20),
-        doc
-      );
-    }
-  );
-}
+// parse body params and attach them to res.body
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(compress());
+app.use(methodOverride());
+
+// enable detailed API logging in dev env
+if (config.env === "development") app.use(logger("dev"));
+
+// all routes are marked as private routes within the app
+app.use("/api/v1", routes);
+
+// if error is not an instanceOf APIError, convert it.
+app.use(error.converter);
+
+// catch 404 and forward to error handler
+app.use(error.notFound);
+
+// error handler, send stacktrace only during development
+app.use(error.handler);
 
 // opens a port if the environment is not test
 if (process.env.NODE_ENV !== "test") {
-  // listen on port config.port
   server.listen(config.port, () => {
     console.info(`server started on port ${config.port} (${config.env})`); // eslint-disable-line no-console
   });
 }
-
-export default server;
