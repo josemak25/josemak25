@@ -6,7 +6,7 @@ dotEnv.config();
 // define validation for all the env vars
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string()
-    .valid('development', 'production', 'test', 'provision')
+    .valid('development', 'production', 'test')
     .default('development'),
   PORT: Joi.number().default(6060),
   MONGOOSE_DEBUG: Joi.boolean().when('NODE_ENV', {
@@ -15,15 +15,11 @@ const envVarsSchema = Joi.object({
     otherwise: Joi.boolean().default(false)
   }),
   MONGO_HOST: Joi.string()
-    .required()
     .default('mongodb://localhost')
-    .description('Database host name'),
-  BCRYPT_ROUND: Joi.number()
-    .required()
-    .description('bcrypt password hash'),
-  JWT_SECRET: Joi.string()
-    .required()
-    .description('JWT required to sign token'),
+    .description('Database host name')
+    .required(),
+  BCRYPT_ROUND: Joi.number().required().description('bcrypt password hash'),
+  JWT_SECRET: Joi.string().required().description('JWT required to sign token'),
   JWT_EXPIRY: Joi.string()
     .required()
     .description('JWT expiry required to sign off token expiry time')
