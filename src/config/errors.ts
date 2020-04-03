@@ -1,15 +1,12 @@
-import config from "./env";
-import { Request, Response, NextFunction } from "express";
-import httpStatus from "http-status";
-import { isCelebrate } from "celebrate";
+import config from '.';
+import { Request, Response, NextFunction } from 'express';
+import httpStatus from 'http-status';
+import { isCelebrate } from 'celebrate';
 
-import {
-  ErrorResponseInterface,
-  ExpressErrorInterface
-} from "../types/customError.type";
+import { ErrorResponseInterface, ExpressErrorInterface } from './types';
 
-import APIError from "../helpers/APIErrors";
-import { JoiErrorFormatter } from "../helpers/JoiErrorFormatter";
+import APIError from '../helpers/APIErrors';
+import { JoiErrorFormatter } from '../helpers/JoiErrorFormatter';
 
 function customError() {
   const handler = (
@@ -27,10 +24,10 @@ function customError() {
       stack: err.stack
     };
 
-    if (config.env !== "development") {
+    if (config.env !== 'development') {
       delete response.stack;
     }
-    res.json(response);
+    res.status(err.status).json(response);
   };
 
   const converter = (
@@ -42,7 +39,7 @@ function customError() {
     let convertedError: Error = err;
     if (isCelebrate(err)) {
       convertedError = new APIError({
-        message: "Invalid fields",
+        message: 'Invalid fields',
         status: httpStatus.BAD_REQUEST, //unprocessible entity
         //@ts-ignore
         errors: JoiErrorFormatter(err.joi.details) || {},
@@ -69,7 +66,7 @@ function customError() {
   ) => {
     if (err) {
       //@ts-ignore
-      const tokenError = new APIError("Unauthorized", err.status, true);
+      const tokenError = new APIError('Unauthorized', err.status, true);
       next(tokenError);
     }
     next();
@@ -78,7 +75,7 @@ function customError() {
   // catch 404 errors
   const notFound = (req: Request, res: Response) => {
     const err = new APIError({
-      message: "Not found",
+      message: 'Not found',
       status: httpStatus.NOT_FOUND,
       stack: undefined,
       errors: null
