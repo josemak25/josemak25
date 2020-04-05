@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Model, Document } from 'mongoose';
+import { Model as ModelType, Document } from 'mongoose';
 import Query from './query';
 import QueryInterface from './types';
 
@@ -16,7 +16,7 @@ const builderObject: QueryInterface = AllModels.reduce(
     if (file.includes('.map')) return accumulator;
 
     // get every model from the model folder
-    const Model: Model<Document> = require(`../models/${file}`).default;
+    const Model: ModelType<Document> = require(`../models/${file}`).default;
 
     // get model name
     const [fileName] = file.split('.');
