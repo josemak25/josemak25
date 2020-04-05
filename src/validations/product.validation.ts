@@ -23,18 +23,22 @@ export default {
       brandId: Joi.string()
         .min(24)
         .max(24)
+        .pattern(/^[0-9a-fA-F]{24}$/)
         .required(),
       categoryId: Joi.string()
         .min(24)
         .max(24)
+        .pattern(/^[0-9a-fA-F]{24}$/)
         .required(),
       discountId: Joi.string()
         .min(24)
         .max(24)
+        .pattern(/^[0-9a-fA-F]{24}$/)
         .required(),
       tagId: Joi.string()
         .min(24)
         .max(24)
+        .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
     }
   }
