@@ -6,7 +6,7 @@ import { Role } from '../types/user';
 export default (req: Request, res: Response, next: NextFunction) => {
   const { role } = req.token;
 
-  if (role !== Role.admin) {
+  if (role !== Role.ADMIN) {
     return res.json(
       sendResponse(
         httpStatus.UNAUTHORIZED,

@@ -1,13 +1,13 @@
 import { Document } from 'mongoose';
 
 export enum Gender {
-  male = 'male',
-  female = 'female'
+  MALE = 'male',
+  FEMALE = 'female'
 }
 
 export enum Role {
-  customer = 'customer',
-  admin = 'administrator'
+  CUSTOMER = 'customer',
+  ADMIN = 'administrator'
 }
 
 export default interface UserInterface extends Document {
@@ -22,6 +22,9 @@ export default interface UserInterface extends Document {
   gender: Gender;
   isBlocked: boolean;
   role: Role;
+  avatar: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type UserType = {
@@ -36,22 +39,16 @@ export type UserType = {
   gender?: Gender;
   isBlocked?: boolean;
   role?: Role;
+  avatar?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
-export type UserTokenType = {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string | null;
-  DOB: Date | null;
-  gender: Gender;
-  isVerified: boolean;
-  isBlocked: boolean;
+export interface UserTokenType extends UserInterface {
   role: Role;
   sub: string;
   iat: number;
-};
+}
 
 export type UserExitsType = { phone: string };
 

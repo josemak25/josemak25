@@ -8,7 +8,7 @@ import UserInterface, { UserType, UserExitsType } from '../types/user';
 import queries from '../queries';
 const { UserQuery } = queries;
 
-export default class userController {
+export default class authController {
   static async register(
     req: Request,
     res: Response,

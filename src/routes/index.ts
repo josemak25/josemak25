@@ -1,8 +1,9 @@
 import { Request, Response, Router } from 'express';
 
+import authRoute from './auth.routes';
 import userRoute from './user.route';
 import productRoute from './product.route';
-import authRoute from './auth.routes';
+import reviewRoute from './review.route';
 
 const router = Router();
 
@@ -29,5 +30,8 @@ router.use('/users', userRoute);
 
 // mount product routes
 router.use('/products', productRoute);
+
+// mount review routes
+router.use('/reviews', reviewRoute);
 
 export default router;

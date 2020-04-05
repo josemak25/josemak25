@@ -13,4 +13,5 @@ interface QueryBuilderInterface {
 export default interface QueryInterface {
   UserQuery: QueryBuilderInterface;
   ProductQuery: QueryBuilderInterface;
+  ReviewQuery: QueryBuilderInterface;
 }
