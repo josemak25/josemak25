@@ -32,8 +32,8 @@ export default class userController {
       const token = await authService.issue(user.toJSON());
 
       return res
-        .status(httpStatus.OK)
-        .json(sendResponse(httpStatus.OK, 'success', user, null, token));
+        .status(httpStatus.FOUND)
+        .json(sendResponse(httpStatus.FOUND, 'success', user, null, token));
     } catch (error) {
       next(error);
     }
