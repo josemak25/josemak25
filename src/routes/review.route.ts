@@ -7,14 +7,17 @@ import reviewCtrl from '../controllers/review.controller';
 const router = Router();
 
 router
-  .route('/')
+  .route('/:productId')
   .get(
     [
       validate(reviewValidation.getProductReview, { abortEarly: false }),
       authToken
     ],
     reviewCtrl.getAll
-  )
+  );
+
+router
+  .route('/')
   .post(
     [validate(reviewValidation.createReview, { abortEarly: false }), authToken],
     reviewCtrl.create
