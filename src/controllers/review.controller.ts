@@ -16,9 +16,12 @@ export default class reviewController {
     res: Response,
     next: NextFunction
   ): Promise<ResponseInterface | void> {
+    const { id: userId } = req.token;
+
     try {
       const review = await ReviewQuery.create<ReviewType, ReviewInterface>({
-        ...req.body
+        ...req.body,
+        userId
       });
 
       return res
