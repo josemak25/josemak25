@@ -1,4 +1,5 @@
 import { Joi } from 'celebrate';
+import { Gender, Role } from '../types/user';
 
 export default {
   signupUser: {
@@ -26,11 +27,11 @@ export default {
       isBlocked: Joi.boolean().default(false),
       isVerified: Joi.boolean().default(false),
       gender: Joi.string()
-        .allow('male', 'female')
-        .default('male'),
+        .allow(Gender.MALE, Gender.FEMALE)
+        .default(Gender.MALE),
       role: Joi.string()
-        .allow('customer', 'administrator')
-        .default('customer')
+        .allow(Role.CUSTOMER, Role.ADMIN)
+        .default(Role.CUSTOMER)
     }
   },
 
