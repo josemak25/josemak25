@@ -6,6 +6,9 @@ export type ConfigTypes = {
   bcryptRound: number;
   jwtExpirationInterval: number;
   mongoUri: string;
+  driveClientEmail: string;
+  drivePrivateKey: string;
+  drivePrivateKeyID: string;
 };
 
 export interface ErrorResponseInterface {
