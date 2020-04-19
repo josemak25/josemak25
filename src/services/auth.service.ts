@@ -9,8 +9,8 @@ export default class authService {
         payload,
         config.jwtSecret,
         { expiresIn: config.jwtExpirationInterval },
-        (err, decoded) => {
-          if (err) return reject(err);
+        (error, decoded) => {
+          if (error) return reject(error);
           return resolve(decoded);
         }
       )
@@ -19,8 +19,8 @@ export default class authService {
 
   public static verify(token: string): Promise<any> {
     return new Promise((resolve, reject) =>
-      jwt.verify(token, config.jwtSecret, (err, decoded) => {
-        if (err) return reject(err);
+      jwt.verify(token, config.jwtSecret, (error, decoded) => {
+        if (error) return reject(error);
         return resolve(decoded);
       })
     );
