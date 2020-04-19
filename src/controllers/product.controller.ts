@@ -57,7 +57,7 @@ export default class productController {
           $lookup: {
             localField: '_id',
             from: 'images',
-            foreignField: 'productId',
+            foreignField: 'referenceId',
             as: 'images'
           }
         },
@@ -79,7 +79,7 @@ export default class productController {
             images: {
               $push: {
                 id: '$images._id',
-                productId: '$images.productId',
+                productId: '$images.referenceId',
                 url: '$images.url',
                 thumbnailUrl: '$images.thumbnailUrl',
                 createdAt: '$images.createdAt',
