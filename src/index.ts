@@ -1,27 +1,32 @@
-import http from "http";
-import express from "express";
-import logger from "morgan";
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
-import compress from "compression";
-import methodOverride from "method-override";
-import cors from "cors";
-import helmet from "helmet";
-import routes from "./routes";
-import config from "./config";
-import error from "./config/errors";
+import http from 'http';
+import express from 'express';
+import logger from 'morgan';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import compress from 'compression';
+import formData from 'express-form-data';
+import methodOverride from 'method-override';
+import cors from 'cors';
+import helmet from 'helmet';
+import routes from './routes';
+import config, { unCompressedImageDir } from './config';
+import error from './config/errors';
 
 // express application
 const app = express();
 const server = new http.Server(app);
 
 // start db
-import "./config/database";
+import './config/database';
 
 // secure apps by setting various HTTP headers
 app.use(
   helmet({ dnsPrefetchControl: false, frameguard: false, ieNoOpen: false })
 );
+
+// compress request data for easy transport
+app.use(compress());
+app.use(methodOverride());
 
 // allow cross origin requests
 // configure to only allow requests from certain origins
@@ -32,14 +37,17 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(compress());
-app.use(methodOverride());
+// parse form-data params and attach them to res.files && [req.fields]
+app.use(formData.parse({ uploadDir: unCompressedImageDir }));
+
+// delete from the request all empty files (size == 0)
+app.use(formData.format());
 
 // enable detailed API logging in dev env
-if (config.env === "development") app.use(logger("dev"));
+if (config.env === 'development') app.use(logger('dev'));
 
 // all routes are marked as private routes within the app
-app.use("/api/v1", routes);
+app.use('/api/v1', routes);
 
 // if error is not an instanceOf APIError, convert it.
 app.use(error.converter);
@@ -51,7 +59,7 @@ app.use(error.notFound);
 app.use(error.handler);
 
 // opens a port if the environment is not test
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== 'test') {
   server.listen(config.port, () => {
     console.info(`server started on port ${config.port} (${config.env})`); // eslint-disable-line no-console
   });
