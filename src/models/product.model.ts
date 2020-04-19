@@ -22,15 +22,15 @@ const ProductSchema = new Schema(
       required: true
     },
 
-    price: { type: Number, required: true, default: 0 },
+    price: { type: Number, required: true, min: 0, default: 0 },
 
-    quantity: { type: Number, required: true, default: 0 },
+    quantity: { type: Number, required: true, min: 0, default: 0 },
 
-    totalStock: { type: Number, required: true, default: 0 },
+    totalStock: { type: Number, required: true, min: 0, default: 0 },
 
     isDeleted: { type: Boolean, default: false },
 
-    rating: { type: Number, default: 0 },
+    rating: { type: Number, min: 0, default: 0 },
 
     brandId: { type: Schema.Types.ObjectId, ref: 'brand', required: true },
 

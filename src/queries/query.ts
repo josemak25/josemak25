@@ -1,4 +1,5 @@
-import { Model } from "mongoose";
+import { Model } from 'mongoose';
+import { QueryOptions } from './types';
 
 export default class Queries {
   private Model: Model<any>;
@@ -11,12 +12,20 @@ export default class Queries {
     return this.Model.create(payload);
   }
 
+  insertMany<T, U>(payload: T[]): Promise<U[]> {
+    return this.Model.insertMany(payload);
+  }
+
   findOne<T, U>(payload: T): Promise<U> {
     return this.Model.findOne(payload).exec();
   }
 
-  findAll<T, U>(payload: T): Promise<U[]> {
-    return this.Model.find(payload).exec();
+  findAll<T, U>(payload: T, options: QueryOptions): Promise<U[]> {
+    return this.Model.find(payload)
+      .skip(+options.skip)
+      .limit(+options.limit ? +options.limit : 30)
+      .sort(options.sort ? options.sort : 'createdAt')
+      .exec();
   }
 
   update<T>({ payload, where }: any): Promise<T> {

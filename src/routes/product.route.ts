@@ -3,7 +3,7 @@ import { celebrate as validate } from 'celebrate';
 import productValidation from '../validations/product.validation';
 import authToken from '../policies/auth.policy';
 import productCtrl from '../controllers/product.controller';
-import IsAdmin from '../middlewares/is-admin.middleware';
+import IsAdmin from '../middlewares/is_admin.middleware';
 
 const router = Router();
 

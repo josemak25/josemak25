@@ -6,50 +6,50 @@ import { isCelebrate } from 'celebrate';
 import { ErrorResponseInterface, ExpressErrorInterface } from './types';
 
 import APIError from '../helpers/APIErrors';
-import { JoiErrorFormatter } from '../helpers/JoiErrorFormatter';
+import JoiErrorFormatter from '../helpers/joi_error_formatter';
 
 function customError() {
   const handler = (
-    err: ExpressErrorInterface,
+    error: ExpressErrorInterface,
     _req: Request,
     res: Response,
     _next: NextFunction
   ) => {
     const response: ErrorResponseInterface = {
-      statusCode: err.status,
+      statusCode: error.status,
       //@ts-ignore
-      message: err.message || httpStatus[err.status],
-      errors: err.errors,
+      message: error.message || httpStatus[error.status],
+      errors: error.errors,
       payload: null,
-      stack: err.stack
+      stack: error.stack
     };
 
     if (config.env !== 'development') {
       delete response.stack;
     }
-    res.status(err.status).json(response);
+    res.status(error.status).json(response);
   };
 
   const converter = (
-    err: ExpressErrorInterface,
+    error: ExpressErrorInterface,
     req: Request,
     res: Response,
     _next: NextFunction
   ) => {
-    let convertedError: Error = err;
-    if (isCelebrate(err)) {
+    let convertedError: Error = error;
+    if (isCelebrate(error)) {
       convertedError = new APIError({
         message: 'Invalid fields',
-        status: httpStatus.BAD_REQUEST, //unprocessible entity
+        status: httpStatus.BAD_REQUEST,
         //@ts-ignore
-        errors: JoiErrorFormatter(err.joi.details) || {},
+        errors: JoiErrorFormatter(error.joi.details) || {},
         payload: {}
       });
-    } else if (!(err instanceof APIError)) {
+    } else if (!(error instanceof APIError)) {
       convertedError = new APIError({
-        message: err.message,
-        status: err.status,
-        stack: err.stack,
+        message: error.message,
+        status: error.status,
+        stack: error.stack,
         errors: null
       });
     }
@@ -59,14 +59,14 @@ function customError() {
   };
 
   const errorHandler = (
-    err: Error,
+    error: Error,
     _req: Request,
     _res: Response,
     next: NextFunction
   ) => {
-    if (err) {
+    if (error) {
       //@ts-ignore
-      const tokenError = new APIError('Unauthorized', err.status, true);
+      const tokenError = new APIError('Unauthorized', error.status, true);
       next(tokenError);
     }
     next();
@@ -74,7 +74,7 @@ function customError() {
 
   // catch 404 errors
   const notFound = (req: Request, res: Response) => {
-    const err = new APIError({
+    const error = new APIError({
       message: 'Not found',
       status: httpStatus.NOT_FOUND,
       stack: undefined,
@@ -82,7 +82,7 @@ function customError() {
     });
 
     //@ts-ignore
-    return handler(err, req, res);
+    return handler(error, req, res);
   };
 
   return {

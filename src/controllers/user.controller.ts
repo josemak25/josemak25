@@ -40,12 +40,15 @@ export default class userController {
   }
 
   static async getAll(
-    _req: Request,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<ResponseInterface | void> {
     try {
-      const users = await UserQuery.findAll<object, UserInterface>({});
+      const users = await UserQuery.findAll<object, UserInterface>(
+        {},
+        { ...req.query }
+      );
 
       return res
         .status(httpStatus.OK)

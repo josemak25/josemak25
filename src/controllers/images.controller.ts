@@ -2,31 +2,28 @@ import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import sendResponse from '../helpers/response';
 import { ResponseInterface } from '../helpers/types';
-import ReviewInterface, {
-  ReviewType,
-  ProductReviewType
-} from '../types/review';
+import ImageInterface, {
+  ImageType,
+  GetProductImageType
+} from '../types/images';
 
 import queries from '../queries';
-const { ReviewQuery } = queries;
+const { ImageQuery } = queries;
 
-export default class reviewController {
+export default class imageController {
   static async create(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<ResponseInterface | void> {
-    const { id: userId } = req.token;
-
     try {
-      const review = await ReviewQuery.create<ReviewType, ReviewInterface>({
-        ...req.body,
-        userId
-      });
+      const images = await ImageQuery.insertMany<ImageType, ImageInterface>(
+        req.uploadedImageFiles
+      );
 
       return res
         .status(httpStatus.CREATED)
-        .json(sendResponse(httpStatus.CREATED, 'success', review));
+        .json(sendResponse(httpStatus.CREATED, 'success', images));
     } catch (error) {
       next(error);
     }
@@ -38,16 +35,16 @@ export default class reviewController {
     next: NextFunction
   ): Promise<ResponseInterface | void> {
     try {
-      const { productId } = req.params;
+      const { referenceId } = req.params;
 
-      const reviews = await ReviewQuery.findAll<
-        ProductReviewType,
-        ReviewInterface
-      >({ productId }, { ...req.query });
+      const images = await ImageQuery.findAll<
+        GetProductImageType,
+        ImageInterface
+      >({ referenceId });
 
       return res
         .status(httpStatus.OK)
-        .json(sendResponse(httpStatus.OK, 'success', reviews));
+        .json(sendResponse(httpStatus.OK, 'success', images));
     } catch (error) {
       next(error);
     }

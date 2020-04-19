@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
+import Product from '../models/product.model';
 import sendResponse from '../helpers/response';
 import { ResponseInterface } from '../helpers/types';
 import ProductInterface, {
   ProductType,
-  ProductExitsType
+  ProductExitsType,
+  ProductQueryType
 } from '../types/product';
 
 import queries from '../queries';
@@ -43,12 +45,55 @@ export default class productController {
   }
 
   static async getAll(
-    _req: Request,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<ResponseInterface | void> {
     try {
-      const products = await ProductQuery.findAll<object, ProductInterface>({});
+      const { skip, limit }: ProductQueryType = req.query;
+
+      const products = await Product.aggregate<ProductInterface>([
+        {
+          $lookup: {
+            localField: '_id',
+            from: 'images',
+            foreignField: 'referenceId',
+            as: 'images'
+          }
+        },
+        { $unwind: '$images' },
+        {
+          $group: {
+            _id: '$_id',
+            name: { $first: '$name' },
+            description: { $first: '$description' },
+            price: { $first: '$price' },
+            quantity: { $first: '$quantity' },
+            totalStock: { $sum: '$totalStock' },
+            isDeleted: { $first: '$isDeleted' },
+            rating: { $sum: '$rating' },
+            brandId: { $first: '$brandId' },
+            categoryId: { $first: '$categoryId' },
+            discountId: { $first: '$discountId' },
+            tagId: { $first: '$tagId' },
+            images: {
+              $push: {
+                id: '$images._id',
+                productId: '$images.referenceId',
+                url: '$images.url',
+                thumbnailUrl: '$images.thumbnailUrl',
+                createdAt: '$images.createdAt',
+                updatedAt: '$images.updatedAt'
+              }
+            },
+            createdAt: { $first: '$createdAt' },
+            updatedAt: { $first: '$updatedAt' }
+          }
+        },
+        { $sort: { createdAt: 1 } },
+        { $limit: limit ? +limit : 30 },
+        { $skip: +skip }
+      ]);
 
       return res
         .status(httpStatus.OK)

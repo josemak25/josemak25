@@ -4,6 +4,7 @@ import sendResponse from '../helpers/response';
 import authService from '../services/auth.service';
 import { ResponseInterface } from '../helpers/types';
 import UserInterface, { UserType, UserExitsType } from '../types/user';
+import getUserDefaultAvatar from '../helpers/get_user_avatar';
 
 import queries from '../queries';
 const { UserQuery } = queries;
@@ -32,8 +33,11 @@ export default class authController {
           );
       }
 
+      const avatar = await getUserDefaultAvatar(req.body);
+
       const user = await UserQuery.create<UserType, UserInterface>({
-        ...req.body
+        ...req.body,
+        ...avatar
       });
 
       return res

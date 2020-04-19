@@ -51,6 +51,10 @@ const UserSchema = new Schema(
 
     isBlocked: { type: Boolean, default: false },
 
+    avatar: { type: String, required: true },
+
+    avatarThumbnail: { type: String, required: true },
+
     gender: {
       type: String,
       required: true,
@@ -62,11 +66,6 @@ const UserSchema = new Schema(
       type: String,
       enum: [Role.CUSTOMER, Role.ADMIN],
       default: Role.CUSTOMER
-    },
-
-    avatar: {
-      type: String,
-      default: 'https://bit.ly/3dWd9Fz'
     }
   },
 
@@ -80,8 +79,8 @@ UserSchema.pre<UserInterface>('save', async function(next) {
   try {
     this.password = await bcryptService.hashPassword(this.toObject());
     next();
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 });
 

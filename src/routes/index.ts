@@ -4,6 +4,7 @@ import authRoute from './auth.routes';
 import userRoute from './user.route';
 import productRoute from './product.route';
 import reviewRoute from './review.route';
+import imageRoute from './image.route';
 
 const router = Router();
 
@@ -33,5 +34,8 @@ router.use('/products', productRoute);
 
 // mount review routes
 router.use('/reviews', reviewRoute);
+
+// mount review routes
+router.use('/images', imageRoute);
 
 export default router;
