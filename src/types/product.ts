@@ -1,10 +1,12 @@
 import { Document } from 'mongoose';
+import ImageInterface from './images';
 
 export default interface ProductInterface extends Document {
   _id: string;
   name: string;
   price: number;
   description: string;
+  images?: ImageInterface[];
   quantity: number;
   totalStock: number;
   isDeleted: boolean;
@@ -12,6 +14,8 @@ export default interface ProductInterface extends Document {
   categoryId: string;
   discountId: string;
   tagId: string;
+  createAt: Date;
+  updatedAt: Date;
 }
 
 export type ProductType = {
@@ -19,6 +23,7 @@ export type ProductType = {
   name: string;
   price: number;
   description: string;
+  images?: ImageInterface[];
   quantity: number;
   totalStock: number;
   isDeleted?: boolean;
@@ -26,6 +31,10 @@ export type ProductType = {
   categoryId: string;
   discountId: string;
   tagId: string;
+  createAt?: Date;
+  updatedAt?: Date;
 };
 
 export type ProductExitsType = { name: string };
+
+export type ProductQueryType = { skip: number; limit?: number };
