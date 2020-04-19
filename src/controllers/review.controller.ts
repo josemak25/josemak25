@@ -43,7 +43,7 @@ export default class reviewController {
       const reviews = await ReviewQuery.findAll<
         ProductReviewType,
         ReviewInterface
-      >({ productId });
+      >({ productId }, { ...req.query });
 
       return res
         .status(httpStatus.OK)
