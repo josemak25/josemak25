@@ -6,11 +6,11 @@ import { JoiErrorInterface } from './types';
  * @returns {Object}
  */
 
-export const JoiErrorFormatter = (error: JoiErrorInterface[]): object => {
-  return error.reduce<any>((acc, err) => {
-    const key: string = err.path[0];
-    acc[key] = err.message.replace(/"/g, '');
+export default function JoiErrorFormatter(errors: JoiErrorInterface[]): object {
+  return errors.reduce<any>((acc, error) => {
+    const key: string = error.path[0];
+    acc[key] = error.message.replace(/"/g, '');
     if (key === 'phone') acc[key] = 'Phone number must be a valid number!';
     return acc;
   }, {});
-};
+}
