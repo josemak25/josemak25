@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import authToken from '../policies/auth.policy';
 import userCtrl from '../controllers/user.controller';
-import IsAdmin from '../middlewares/is-admin.middleware';
+import IsAdmin from '../middlewares/is_admin.middleware';
 
 const router = Router();
 
