@@ -4,7 +4,7 @@ import sendResponse from '../helpers/response';
 import authService from '../services/auth.service';
 import { ResponseInterface } from '../helpers/types';
 import UserInterface, { UserType, UserExitsType } from '../types/user';
-import getUserDefaultAvatar from '../helpers/get_user_avater';
+import getUserDefaultAvatar from '../helpers/get_user_avatar';
 
 import queries from '../queries';
 const { UserQuery } = queries;
