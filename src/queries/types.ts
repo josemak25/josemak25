@@ -23,4 +23,5 @@ export default interface QueryInterface {
   ProductQuery: QueryBuilderInterface;
   ReviewQuery: QueryBuilderInterface;
   ImageQuery: QueryBuilderInterface;
+  CategoryQuery: QueryBuilderInterface;
 }
