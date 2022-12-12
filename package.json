@@ -41,7 +41,7 @@
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "eslint-config-prettier": "^6.10.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-form-data": "^2.0.12",
     "googleapis": "39",
     "helmet": "^3.22.0",
