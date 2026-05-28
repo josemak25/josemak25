@@ -1,6 +1,6 @@
 <div align="center">
 
-# Joseph Makiri
+# Joseph Amakiri
 
 ### Software Engineer · Product Builder · Design Systems Architect
 
